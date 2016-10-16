@@ -67,7 +67,7 @@
     
     ContactPeople *contact = [[ContactPeople alloc] init];
     contact.localID = [NSNumber numberWithInt:0];
-    contact.name = @"西藏";
+    contact.name = @"长江";
     
     NSMutableArray *phoneArray = [[NSMutableArray alloc] init]; 
     [phoneArray addObject:@"13800138000"];

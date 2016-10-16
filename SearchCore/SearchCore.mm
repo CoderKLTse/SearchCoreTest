@@ -1,31 +1,32 @@
 #include "SearchCore.h"
 #include <stdlib.h> 
+#include "stdio.h"
 //#include "MrUtilDebug.h"
 
 Array iMultiPyCodeSorted;
 BOOL iIsMultiPYinWordsLoaded = FALSE;
 
-int SIZEOF_INT = sizeof(int);
-int SIZEOF_U2Char = sizeof(u2char);
-int SIZEOF_WordCode = sizeof(WordCode);
-int SIZEOF_SearchData = sizeof(SearchData);
-int SIZEOF_SearchPos = sizeof(SearchPos);
-int SIZEOF_SearchSort = sizeof(SearchSort);
+NSInteger SIZEOF_INT = sizeof(NSInteger);
+NSInteger SIZEOF_U2Char = sizeof(u2char);
+NSInteger SIZEOF_WordCode = sizeof(WordCode);
+NSInteger SIZEOF_SearchData = sizeof(SearchData);
+NSInteger SIZEOF_SearchPos = sizeof(SearchPos);
+NSInteger SIZEOF_SearchSort = sizeof(SearchSort);
 
 //kmp比较需缓存
-int iKmpBuf[128];
+NSInteger iKmpBuf[128];
 
-int searchPosMallocSize = 0;
+NSInteger searchPosMallocSize = 0;
 SearchPos *searchPosMalloc = NULL;
-int searchPosPtrMallocSize = 0;
+NSInteger searchPosPtrMallocSize = 0;
 SearchPos **searchPosPtrArray = NULL;
 Array searchPosMallocArray;
 
 //enum {ID_Ascii = 0,ID_PinYinCode = 1,ID_CharIndex = 2,ID_CharIndex2 = 3,ID_CannotSpell = 4};
 
 BOOL isPinYinCodeIndexSorted = FALSE;
-int PinYinCodeIndexSort[KPyCodeNum];
-int PinYinNum[KPyCodeNum];
+NSInteger PinYinCodeIndexSort[KPyCodeNum];
+NSInteger PinYinNum[KPyCodeNum];
 
 //汉字基本发音表   
 const   char   *PinYinCode[KPyCodeNum]   =     
@@ -178,9 +179,9 @@ const   long PyCodeIndex[82][256]   =
   };
 
 
-int u2slen(const u2char* str) {
+NSInteger u2slen(const u2char* str) {
 	const u2char* ptr = str;
-	int len = 0;
+	NSInteger len = 0;
 	
 	while (ptr && *ptr) {
 		ptr ++;
@@ -230,9 +231,9 @@ int u2scmp(const u2char* str1,const u2char* str2) {
 void getSortString(SearchSort *node)
 {
     u2char sortString[256];
-	int pos = 0;
-	int lenmax = 127;
-    int i;
+	NSInteger pos = 0;
+	NSInteger lenmax = 127;
+    NSInteger i;
     WordCode code;
     
 	// 提取字符码部分组成字符串，用于排序比较
@@ -287,15 +288,15 @@ int SearchSortCmp(void const* item1,void const* item2)
 
 //PinYinCode 按拼音排序后存入PinYinCodeIndexSort
 void SortPinYinCodeIndex(){
-	int low = 0;
-	int mid = 0;
-	int high = 0;
-	int i = 0;
-	int j = 0;
-	int val = 0;
+	NSInteger low = 0;
+	NSInteger mid = 0;
+	NSInteger high = 0;
+	NSInteger i = 0;
+	NSInteger j = 0;
+	NSInteger val = 0;
 	BOOL exist = FALSE;
-	int midIndex = 0;
-	int sort[KPyCodeNum];
+	NSInteger midIndex = 0;
+	NSInteger sort[KPyCodeNum];
 
 	for (i = 0; i < KPyCodeNum ; i ++) {
 		low = 0;
@@ -321,14 +322,14 @@ void SortPinYinCodeIndex(){
 		sort[j] = i;
 	}
 
-	for (int i = 0; i < KPyCodeNum; i ++)
+	for (NSInteger i = 0; i < KPyCodeNum; i ++)
 		PinYinCodeIndexSort[sort[i]] = i;
 }
 
 
 void SearchTreeInit(SearchTree* tree)
 {
-	int i = 0;
+	NSInteger i = 0;
 	ArrayInit(&tree->SearchDataArray);
 
 	for(i = 0;i < KCachedHitNum;i ++)
@@ -346,18 +347,18 @@ void SearchTreeInit(SearchTree* tree)
     
     ArrayInit(&searchPosMallocArray);
     
-    for (int i = 0; i < KPyCodeNum; i ++) {
+    for (NSInteger i = 0; i < KPyCodeNum; i ++) {
         PinYinNum[i] = i;
     }
 }
 
-void Tree_AddData(SearchTree* tree, int aID, const u2char* aText,const u2char* aPhoneNum)
+void Tree_AddData(SearchTree* tree, NSInteger aID, const u2char* aText,const u2char* aPhoneNum)
 {
 	SearchData* data = 0;
-	int len = 0;
-	int size = 0;
+	NSInteger len = 0;
+	NSInteger size = 0;
 	
-	int pos = FindSearchDataInsertIndex(&tree->SearchDataArray,aID);
+	NSInteger pos = FindSearchDataInsertIndex(&tree->SearchDataArray,aID);
 	if( pos < 0 )  //已存在
 		return;
 
@@ -368,7 +369,7 @@ void Tree_AddData(SearchTree* tree, int aID, const u2char* aText,const u2char* a
     data->WordCodeArray = NULL;
 	
 	Text2SearchData( aText, data );
-	tree->SearchDataArray.Insert(&tree->SearchDataArray,(int)data,pos);
+	tree->SearchDataArray.Insert(&tree->SearchDataArray,(NSInteger)data,pos);
 
 	//首字母预处理
 	AddToCachedHit(tree,data);
@@ -386,7 +387,7 @@ void Tree_AddData(SearchTree* tree, int aID, const u2char* aText,const u2char* a
 	return;
 }
 
-void Tree_ReplaceData(SearchTree* tree, int aID, const u2char* aText,const u2char* aPhoneNum )
+void Tree_ReplaceData(SearchTree* tree, NSInteger aID, const u2char* aText,const u2char* aPhoneNum )
 {
 	Tree_DeleteData(tree,aID);
 	
@@ -395,10 +396,10 @@ void Tree_ReplaceData(SearchTree* tree, int aID, const u2char* aText,const u2cha
 	return;
 }
 
-void Tree_DeleteData(SearchTree* tree, int aID )
+void Tree_DeleteData(SearchTree* tree, NSInteger aID )
 {
-	int i = 0;
-	int pos = 0;
+	NSInteger i = 0;
+	NSInteger pos = 0;
 	Array* cache = NULL;
 	SearchData *data = NULL;
 	
@@ -427,8 +428,8 @@ void Tree_DeleteData(SearchTree* tree, int aID )
 
 void Tree_SetMatchFunction(SearchTree* tree,const u2char* aMatchFunc)
 {
-	int len = 0;
-	int size = 0;
+	NSInteger len = 0;
+	NSInteger size = 0;
 	if (tree->iMatchFunc) {
 		free(tree->iMatchFunc);
         tree->iMatchFunc = NULL;
@@ -453,11 +454,11 @@ void LoadMultiPYinWords(const char* multiPYinPath)
     
 	FILE* file = NULL;
 	FILE* fp = NULL;
-	int size = 0;
-	int i = 0;
+	NSInteger size = 0;
+	NSInteger i = 0;
 	unsigned digital_10 = 0;
 	unsigned digital_16 = 0;
-	int index = 0;
+	NSInteger index = 0;
 	char* buf = NULL;
 	unsigned char word = 0;
 	unsigned char word1 = 0;
@@ -506,7 +507,7 @@ void LoadMultiPYinWords(const char* multiPYinPath)
 				cur = (WordCode*)malloc(SIZEOF_WordCode);
 				cur->Word = digital_16;
 				cur->PyCodeNum = 0;
-				cur->PyCodeIndex = (int*)malloc(SIZEOF_INT*KMaxPyCode);
+				cur->PyCodeIndex = (NSInteger*)malloc(SIZEOF_INT*KMaxPyCode);
 				//DP1("cur->Word %d",cur->Word)
 				index = FindIndexInMultiPYin(cur->Word);
 				if( index >= 0 )
@@ -515,7 +516,7 @@ void LoadMultiPYinWords(const char* multiPYinPath)
 					cur = NULL;
 					}
 				else
-					iMultiPyCodeSorted.Insert(&iMultiPyCodeSorted,(int)cur,-index-1);
+					iMultiPyCodeSorted.Insert(&iMultiPyCodeSorted,(NSInteger)cur,-index-1);
 				}
 			else if( digital_10 > 0 && cur )				
 				{									
@@ -538,12 +539,12 @@ void LoadMultiPYinWords(const char* multiPYinPath)
 
 BOOL IsMatchByKmp(const u2char* aText,const u2char* wordInput,Array* iMatchPosInPinYin)
 {
-	int i,j;
-	int len1 = 0;
-	int len2 = 0;
-	int p1 = 0;
-	int p2 = 0;
-	int k = 0;
+	NSInteger i,j;
+	NSInteger len1 = 0;
+	NSInteger len2 = 0;
+	NSInteger p1 = 0;
+	NSInteger p2 = 0;
+	NSInteger k = 0;
 	
 	iKmpBuf[0] = 0;
 	j = 0;	
@@ -587,11 +588,11 @@ BOOL IsMatchByKmp(const u2char* aText,const u2char* wordInput,Array* iMatchPosIn
 	return FALSE;
 }
 
-int FindSearchDataIndex(Array* ptr,int aID,SearchData** data)
+NSInteger FindSearchDataIndex(Array* ptr,NSInteger aID,SearchData** data)
 {
-   int low = 0;
-   int high = ptr->size - 1;
-   int mid;
+   NSInteger low = 0;
+   NSInteger high = ptr->size - 1;
+   NSInteger mid;
    SearchData* temp;
    
    while (low <= high) {
@@ -613,10 +614,10 @@ int FindSearchDataIndex(Array* ptr,int aID,SearchData** data)
    return -(low+1);
 }
 
-int FindSearchDataInsertIndex(Array* ptr,int aID)
+NSInteger FindSearchDataInsertIndex(Array* ptr,NSInteger aID)
 {
 	SearchData* data = 0;
-	int pos = FindSearchDataIndex(ptr,aID,&data);
+	NSInteger pos = FindSearchDataIndex(ptr,aID,&data);
 	if( pos < 0 )
 		return - pos - 1;
 	else
@@ -627,7 +628,7 @@ void Text2SearchData(const u2char* aText,SearchData *data)
 {
 	const u2char* ptr = aText;
 	u2char character;
-	int count = u2slen(aText);
+	NSInteger count = u2slen(aText);
 
     // 遍历各个字符，转换为WordCode数组后保存
     data->WordCodeArray = NULL;
@@ -653,9 +654,9 @@ BOOL Word2Code( u2char aWord, WordCode *code )
 {
 	 unsigned char t1 = (aWord >> 8) & 0xFF;
 	 unsigned char t2 = aWord & 0xFF;
-	 int PyIndex;
+	 NSInteger PyIndex;
 	 u2char word = 0;
-	 int index;
+	 NSInteger index;
 
 	code->Word = aWord;
 	code->PyCodeNum = 0;
@@ -689,7 +690,7 @@ BOOL Word2Code( u2char aWord, WordCode *code )
 				// 添加到WordCode
 				code->PyCodeNum = 1;
 				index = PyCodeIndex[t1-78][t2] - 1;
-				code->PyCodeIndex = (int*)&PinYinNum[index];
+				code->PyCodeIndex = (NSInteger*)&PinYinNum[index];
 				}
 			}
 		}
@@ -698,16 +699,16 @@ BOOL Word2Code( u2char aWord, WordCode *code )
 	return TRUE;
 }
 
-int FindIndexInMultiPYin(unsigned int key)
+NSInteger FindIndexInMultiPYin(NSUInteger key)
 {
 	// 二分法查找确定	
-	int low = 0;
-	int high = iMultiPyCodeSorted.size - 1;
+	NSInteger low = 0;
+	NSInteger high = iMultiPyCodeSorted.size - 1;
 	WordCode *midVal;
 
 	while(low <= high)
 		{
-		int mid = (low + high) >> 1;
+		NSInteger mid = (low + high) >> 1;
 		midVal = (WordCode *)iMultiPyCodeSorted.GetValue(&iMultiPyCodeSorted,mid);
 		
 		if( midVal->Word < key )
@@ -724,9 +725,9 @@ int FindIndexInMultiPYin(unsigned int key)
 
 void AddToCachedHit(SearchTree* tree, SearchData *aData)
 {
-	int i = 0;
-	int j = 0;
-	int capticalIndex = 0;
+	NSInteger i = 0;
+	NSInteger j = 0;
+	NSInteger capticalIndex = 0;
 	WordCode code;
     u2char word;
     
@@ -773,12 +774,12 @@ void AddToCachedHit(SearchTree* tree, SearchData *aData)
 
 void AddToCachedHitSingle(SearchTree* tree,SearchData *aData, Array* aCacheArray)
 {
-	int pos = FindSearchDataInsertIndex(aCacheArray, aData->id);
+	NSInteger pos = FindSearchDataInsertIndex(aCacheArray, aData->id);
 	if( pos >= 0 )
 		{
 		// 不存在
 			//NSLog(@"pos %d",pos);
-		aCacheArray->Insert(aCacheArray,(int)aData, pos);
+		aCacheArray->Insert(aCacheArray,(NSInteger)aData, pos);
 		}
 	return;
 }
@@ -787,23 +788,23 @@ void AddToCachedHitSingle(SearchTree* tree,SearchData *aData, Array* aCacheArray
 void Tree_Search(SearchTree* tree, u2char* aText, Array* aSearchedArray,Array* aNameMatchArray, Array* aPhoneMatchArray)
 {
 
-	int i = 0;
-	int value = 0;
-	int count = 0;
-	int len = 0;
-	int temp = 0;
+	NSInteger i = 0;
+	NSInteger value = 0;
+	NSInteger count = 0;
+	NSInteger len = 0;
+	NSInteger temp = 0;
 	u2char* textPtr = 0;
 	u2char* buf = 0;
 	u2char* bufPtr = 0;
-	int pos = 0;
-    int curSearchWordNum = 0;
+	NSInteger pos = 0;
+    NSInteger curSearchWordNum = 0;
 
 //    NSLog(@"Tree_Search begin 0");
 	SearchData* iCurSeachData = tree->iCurSeachData;
 	SearchData *dataToSearch = 0;
 	Array* cache = 0;
 	SearchSort *searchSortPtr = 0;
-    int matchCount = 0;
+    NSInteger matchCount = 0;
 
     Array aNameMatchHits;
     Array aPhoneMatchHits;
@@ -859,7 +860,7 @@ void Tree_Search(SearchTree* tree, u2char* aText, Array* aSearchedArray,Array* a
             node->matchAllInWord = value & 1;
             node->iSortString = NULL;
 
-            aNameMatchHits.Append(&aNameMatchHits, (int)dataToSearch);
+            aNameMatchHits.Append(&aNameMatchHits, (NSInteger)dataToSearch);
             //NSLog(@"%d %d %d %d %d %d",aID,node->matchStart,node->matchEnd,node->pos,node->matchAllInPy,node->matchAllInWord);
         }
     }
@@ -923,7 +924,7 @@ void Tree_Search(SearchTree* tree, u2char* aText, Array* aSearchedArray,Array* a
 BOOL SearchCachedHit(SearchTree* tree, u2char word, Array **aHits)
 {
 	BOOL isMakeSure = TRUE;
-	int capticalIndex;
+	NSInteger capticalIndex;
     WordCode code;
 
 //    NSLog(@"SearchCachedHit 0");
@@ -995,7 +996,7 @@ BOOL SearchCachedHit(SearchTree* tree, u2char word, Array **aHits)
 					if( pos >= 0 )
 						{
 						//不存在
-						aHits->Insert(aHits,(int)data,pos);
+						aHits->Insert(aHits,(NSInteger)data,pos);
 						}
 					}
 				}
@@ -1010,22 +1011,22 @@ BOOL SearchCachedHit(SearchTree* tree, u2char word, Array **aHits)
 /*
  * 确定某一搜索集是否匹配搜索串  return匹配的权值:初位置8bit+末位置8bit+全拼匹配8bit+全汉字匹配8bit,<0为不匹配
  */
-int IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL iIsLogTrace)
+NSInteger IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL iIsLogTrace)
 {	
-	int j = 0;
-	int k = 0;
-	int count = 0;
-	int aSearchCount = aSearchWordData->WordCodeNum;
-	int aPYinNum = 0;
+	NSInteger j = 0;
+	NSInteger k = 0;
+	NSInteger count = 0;
+	NSInteger aSearchCount = aSearchWordData->WordCodeNum;
+	NSInteger aPYinNum = 0;
 
-	int aPos = 0;
-	int nWord = 0;
-	int nPyCode = 0;
-	int nchar = 0;
-	int nextword = 0;
-	int value = -1;
-	int temp1 = 0;
-	int temp2 = 0;
+	NSInteger aPos = 0;
+	NSInteger nWord = 0;
+	NSInteger nPyCode = 0;
+	NSInteger nchar = 0;
+	NSInteger nextword = 0;
+	NSInteger value = -1;
+	NSInteger temp1 = 0;
+	NSInteger temp2 = 0;
     bool isMatchAllPinYin = true;
     bool isMatchAllWord = true;
 	
@@ -1038,7 +1039,7 @@ int IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL i
 
 	Array* iMatchTrace = &tree->iMatchTrace;
 	
-    int searchPosUseCount = 0;
+    NSInteger searchPosUseCount = 0;
     if (aData->WordCodeNum<<2 > searchPosPtrMallocSize || searchPosPtrMallocSize== 0) {
         if (searchPosPtrArray) {
             free(searchPosPtrArray);
@@ -1069,7 +1070,7 @@ int IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL i
 				pos->iFather = NULL;
 				pos->step = 1;
 				searchPosPtrArray[count ++] = pos;
-				//printf("pos %d\n",pos->pos);
+				//prNSIntegerf("pos %d\n",pos->pos);
 				
 				if( aSearchCount <= 1 )
 					{
@@ -1175,7 +1176,7 @@ int IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL i
 				nextPos = (SearchPos*)malloc(SIZEOF_SearchPos);
 				nextPos->pos = pos->pos;
 
-				iMatchTrace->Append(iMatchTrace,(int)nextPos);
+				iMatchTrace->Append(iMatchTrace,(NSInteger)nextPos);
 				}
 			
 			temp1 = pos->pos;
@@ -1219,7 +1220,7 @@ int IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL i
 /*
  * 确定aWordCode串的aPos位置，是否和aWord相匹配
  */
-BOOL IsMatch(SearchTree* tree,WordCode* aWordCode,int nPyCode,int nchar, unsigned int aWord )
+BOOL IsMatch(SearchTree* tree,WordCode* aWordCode,NSInteger nPyCode,NSInteger nchar, NSUInteger aWord )
 {
 	WordCode* word = aWordCode;
 	const char *pyCode = 0;
@@ -1256,9 +1257,9 @@ BOOL IsMatch(SearchTree* tree,WordCode* aWordCode,int nPyCode,int nchar, unsigne
 }
 
 
-unsigned int ChangeWordToDigit(SearchTree* tree,unsigned int Word)
+NSUInteger ChangeWordToDigit(SearchTree* tree,NSUInteger Word)
 {
-	int index = 0;
+	NSInteger index = 0;
 	;
 	if( Word >= 'A' && Word <= 'Z' )
 		Word = Word - 'A' + 'a';
@@ -1272,29 +1273,29 @@ unsigned int ChangeWordToDigit(SearchTree* tree,unsigned int Word)
 	
 	return Word;
 }
-BOOL CompareWord(SearchTree* tree,unsigned int Word,unsigned int WordInput)
+BOOL CompareWord(SearchTree* tree,NSUInteger Word,NSUInteger WordInput)
 {
     Word = ChangeWordToDigit(tree,Word);
     WordInput = ChangeWordToDigit(tree,WordInput);
 	return Word == WordInput;
 }
 
-BOOL Tree_GetPinYin(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInPinYin)
+BOOL Tree_GetPinYin(SearchTree* tree,NSInteger aID, u2char* aText, Array* iMatchPosInPinYin)
 {
-	int i = 0;
-	int aPos = 0;
-	int nWord = 0;
-	int nPyCode = 0;
-	int nchar  = 0;
-	int aPyCodeNum = 0;
-	int index = 0;
-	int k = 0;
+	NSInteger i = 0;
+	NSInteger aPos = 0;
+	NSInteger nWord = 0;
+	NSInteger nPyCode = 0;
+	NSInteger nchar  = 0;
+	NSInteger aPyCodeNum = 0;
+	NSInteger index = 0;
+	NSInteger k = 0;
 
-	int len = 0;
-	int temp = 0;
-	int iMatchNum = 0;
-	int iMatchIndex = 0;
-	int count = 0;
+	NSInteger len = 0;
+	NSInteger temp = 0;
+	NSInteger iMatchNum = 0;
+	NSInteger iMatchIndex = 0;
+	NSInteger count = 0;
 	
 	WordCode code;
 	const char *pyCode = NULL;
@@ -1390,13 +1391,13 @@ BOOL Tree_GetPinYin(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInP
 	return TRUE;
 }
 
-BOOL Tree_GetPhoneNum(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInPhoneNum)
+BOOL Tree_GetPhoneNum(SearchTree* tree,NSInteger aID, u2char* aText, Array* iMatchPosInPhoneNum)
 {
-	int i = 0;
-	int len = 0;
+	NSInteger i = 0;
+	NSInteger len = 0;
 	u2char* buf = 0;
 	u2char* ptr = 0;
-	unsigned int temp = 0;
+	NSUInteger temp = 0;
 	SearchData *data = NULL;
 	SearchData *iCurSeachData = tree->iCurSeachData;
 	u2char word;
@@ -1426,12 +1427,12 @@ BOOL Tree_GetPhoneNum(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosI
 	return TRUE;
 }
 
-SearchPos* GetSearchPos(int index)
+SearchPos* GetSearchPos(NSInteger index)
 {
     SearchPos *ptr = NULL;
     if (index > searchPosMallocSize || searchPosMallocSize == 0) {
         searchPosMalloc = (SearchPos*)malloc(SIZEOF_SearchPos*KSearchPosMalloc);
-        searchPosMallocArray.Append(&searchPosMallocArray,(int)searchPosMalloc);
+        searchPosMallocArray.Append(&searchPosMallocArray,(NSInteger)searchPosMalloc);
         searchPosMallocSize += KSearchPosMalloc;       
     }
     
@@ -1471,7 +1472,7 @@ void FreeSearchPos(SearchPos* data)
 
 void FreeSearchTree(SearchTree* tree)
 {
-	int i = 0;
+	NSInteger i = 0;
 	Array* cache = 0;
 	if( tree->iMatchFunc ) {
 		free(tree->iMatchFunc);
@@ -1518,7 +1519,7 @@ void ReleaseMultiPYinWords()
 	//释放多音字
 	if( iIsMultiPYinWordsLoaded )
 		{
-		int i = 0;
+		NSInteger i = 0;
 		for( i = 0;i < iMultiPyCodeSorted.size;i ++)
 			FreeWordCode((WordCode*)iMultiPyCodeSorted.GetValue(&iMultiPyCodeSorted,i));
 		

@@ -13,7 +13,6 @@
  ============================================================================
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -25,62 +24,62 @@
 
 
 
-#define MallocIndexByte (INDEX_NUM_MAX*sizeof(int))
-#define MallocByte (MALLOC_SIZE*sizeof(int))
+#define MallocIndexByte (INDEX_NUM_MAX*sizeof(NSInteger))
+#define MallocByte (MALLOC_SIZE*sizeof(NSInteger))
 
 typedef struct ArrayData
 {
-	int* pData;
+	NSInteger* pData;
 	struct ArrayData* next;
 }ArrayData;
 
 typedef struct Array
 {	
-	int size;
-	int mallocsize;       //数据域个数
+	NSInteger size;
+	NSInteger mallocsize;       //数据域个数
 
-	int** pIndexData;	  //索引空间首地址
-	int pIndexNum;        //索引空间个数
+	NSInteger** pIndexData;	  //索引空间首地址
+	NSInteger pIndexNum;        //索引空间个数
 
-	int* pDataEnd;
+	NSInteger* pDataEnd;
 
-	void (*Append)(struct Array* A,int value);
-	void (*Insert)(struct Array* A,int value,int pos);
-	void (*Remove)(struct Array* A,int index);
+	void (*Append)(struct Array* A,NSInteger value);
+	void (*Insert)(struct Array* A,NSInteger value,NSInteger pos);
+	void (*Remove)(struct Array* A,NSInteger index);
 	void (*Reset)(struct Array* A);
-	int (*GetValue)(struct Array* A,int index);
+	NSInteger (*GetValue)(struct Array* A,NSInteger index);
 
 }Array;
 
 void ArrayInit(struct Array* A);
-void ArrayAppend(Array* A,int value);
-void ArrayInsert(Array* A,int value,int pos);
-void ArrayRemove(Array* A,int index);
+void ArrayAppend(Array* A,NSInteger value);
+void ArrayInsert(Array* A,NSInteger value,NSInteger pos);
+void ArrayRemove(Array* A,NSInteger index);
 void ArrayReset(Array* A);
-int ArrayReSize(Array* A);
-int ArrayGetValue(Array* A,int index);
+NSInteger ArrayReSize(Array* A);
+NSInteger ArrayGetValue(Array* A,NSInteger index);
 
 
 typedef struct ArrayC
 {	
-	int  size;			
-	int  pDataSize;       //数据域个数
-	int *pData;         //空间首地址
+	NSInteger  size;			
+	NSInteger  pDataSize;       //数据域个数
+	NSInteger *pData;         //空间首地址
 	
-	int* pDataEnd;
+	NSInteger* pDataEnd;
 
-	void (*Append)(struct ArrayC* A,int value);
+	void (*Append)(struct ArrayC* A,NSInteger value);
 	void (*Reset)(struct ArrayC* A);
-	void (*SetSize)(struct ArrayC* A,int size);
-	int (*GetValue)(struct ArrayC* A,int index);
+	void (*SetSize)(struct ArrayC* A,NSInteger size);
+	NSInteger (*GetValue)(struct ArrayC* A,NSInteger index);
 
 }ArrayC;
 
 
 void ArrayCInit(struct ArrayC* A);
-void ArrayCAppend(ArrayC* A,int value);
+void ArrayCAppend(ArrayC* A,NSInteger value);
 void ArrayCReset(ArrayC* A);
-int  ArrayCGetValue(ArrayC* A,int index);
-void ArrayCSetSize(struct ArrayC* A,int size);
+NSInteger  ArrayCGetValue(ArrayC* A,NSInteger index);
+void ArrayCSetSize(struct ArrayC* A,NSInteger size);
 
 #endif

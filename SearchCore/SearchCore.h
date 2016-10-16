@@ -28,7 +28,7 @@ BOOL Tree_GetPhoneNum
 #include "string.h"
 
 
-//typedef int BOOL;
+//typedef NSInteger BOOL;
 typedef unsigned short u2char;
 #define TRUE 1
 #define FALSE 0
@@ -50,24 +50,24 @@ typedef unsigned short u2char;
 typedef struct WordCode
 {
 u2char Word;                                                //原始unicode码
-int PyCodeNum;                                              // 拼音码个数
-int* PyCodeIndex;                                           // 拼音码值（支持多拼音）
+NSInteger PyCodeNum;                                              // 拼音码个数
+NSInteger* PyCodeIndex;                                           // 拼音码值（支持多拼音）
 
 }WordCode;
 
 typedef struct SearchData
 {
-	int id;                                                 //唯一标志ID
+	NSInteger id;                                                 //唯一标志ID
 	u2char* iPhoneNum;                                      //电话号码，用于号码匹配
 	
-    int WordCodeNum;
+    NSInteger WordCodeNum;
 	u2char *WordCodeArray;
 }SearchData;
 
 typedef struct SearchPos
 {
-	int pos;                                                //(第几个字：18bit) + (第几个拼音码：3bit) + (第几个字母：3bit)
-	int step;                                               //步长:当前匹配到第几个字
+	NSInteger pos;                                                //(第几个字：18bit) + (第几个拼音码：3bit) + (第几个字母：3bit)
+	NSInteger step;                                               //步长:当前匹配到第几个字
 
 	struct SearchPos * iFather;                             //father
 }SearchPos;
@@ -95,7 +95,7 @@ typedef struct SearchSort
 }SearchSort;
 //==============================================  BEGIN  ================================================
 //供外部调用的函数
-int u2slen(const u2char* str);
+NSInteger u2slen(const u2char* str);
 void u2scpy(u2char* des,const u2char* src);
 int u2scmp(const u2char* str1,const u2char* str2);
 
@@ -122,7 +122,7 @@ void ReleaseMultiPYinWords();
  * aText: 名字
  * aPhoneNum：号码
  */
-void Tree_AddData(SearchTree* tree, int aID, const u2char* aText,const u2char* aPhoneNum);
+void Tree_AddData(SearchTree* tree, NSInteger aID, const u2char* aText,const u2char* aPhoneNum);
 
 /*
  * 修改数据源信息
@@ -130,13 +130,13 @@ void Tree_AddData(SearchTree* tree, int aID, const u2char* aText,const u2char* a
  * aText: 名字
  * aPhoneNum：号码
  */
-void Tree_ReplaceData(SearchTree* tree, int aID, const u2char* aText,const u2char* aPhoneNum );
+void Tree_ReplaceData(SearchTree* tree, NSInteger aID, const u2char* aText,const u2char* aPhoneNum );
 
 /*
  * 删除数据源信息
  * aID: 数据索引ID
  */
-void Tree_DeleteData(SearchTree* tree, int aID );
+void Tree_DeleteData(SearchTree* tree, NSInteger aID );
 
 /*
  * 搜索数据
@@ -157,12 +157,12 @@ void Tree_SetMatchFunction(SearchTree* tree,const u2char* aMatchFunc);
  * aText 拼音
  * iMatchPosInPinYin 匹配位置
  */
-BOOL Tree_GetPinYin(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInPinYin);
+BOOL Tree_GetPinYin(SearchTree* tree,NSInteger aID, u2char* aText, Array* iMatchPosInPinYin);
 
 /*
  * 获取号码匹配的号码、匹配位置
  */
-BOOL Tree_GetPhoneNum(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInPhoneNum);
+BOOL Tree_GetPhoneNum(SearchTree* tree,NSInteger aID, u2char* aText, Array* iMatchPosInPhoneNum);
 
 
 //================================================  END  ==============================================
@@ -189,13 +189,13 @@ void AddToCachedHitSingle(SearchTree* tree,SearchData *aData, Array* aCacheArray
 BOOL IsMatchByKmp(const u2char* aText,const u2char* wordInput,Array* iMatchPosInPinYin);
 
 //aID 的索引index  < 0为不存在
-int FindSearchDataIndex(Array* ptr,int aID,SearchData** data);
+NSInteger FindSearchDataIndex(Array* ptr,NSInteger aID,SearchData** data);
 
 /*
  * < 0 已存在
  * > 0 需插入位置
  */
-int FindSearchDataInsertIndex(Array* ptr,int aID);
+NSInteger FindSearchDataInsertIndex(Array* ptr,NSInteger aID);
 
 /*
  *	aText GBK编码
@@ -209,20 +209,20 @@ BOOL SearchCachedHit(SearchTree* tree, u2char word, Array **aHits);
 /*
  * 确定某一搜索集是否匹配搜索串  return匹配的权值,<0为不匹配
  */
-int IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL iIsLogTrace);
+NSInteger IsHit(SearchTree* tree,SearchData* aData, SearchData* aSearchWordData,BOOL iIsLogTrace);
 
 /*
  * 确定aWordCode串的aPos位置，是否和aWord相匹配
  */
-BOOL IsMatch(SearchTree* tree,WordCode* aWordCode,int nPyCode,int nchar, unsigned int aWord );
+BOOL IsMatch(SearchTree* tree,WordCode* aWordCode,NSInteger nPyCode,NSInteger nchar, NSUInteger aWord );
 
-unsigned int ChangeWordToDigit(SearchTree* tree,unsigned int Word);
+NSUInteger ChangeWordToDigit(SearchTree* tree,NSUInteger Word);
 
-BOOL CompareWord(SearchTree* tree,unsigned int Word,unsigned int WordInput);
+BOOL CompareWord(SearchTree* tree,NSUInteger Word,NSUInteger WordInput);
 
-int FindIndexInMultiPYin(unsigned int key);
+NSInteger FindIndexInMultiPYin(NSUInteger key);
 
-SearchPos* GetSearchPos(int index);
+SearchPos* GetSearchPos(NSInteger index);
 
 void FreeWordCode(WordCode* word);
 void FreeSearchData(SearchData* data);

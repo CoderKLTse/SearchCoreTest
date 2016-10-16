@@ -1,6 +1,6 @@
 #include "Array.h"
 
-int sizeof_int = sizeof(int);
+NSInteger sizeof_int = sizeof(NSInteger);
 
 void ArrayInit(struct Array* A)
 {
@@ -20,7 +20,7 @@ void ArrayInit(struct Array* A)
 	return;
 }
 
-void ArrayAppend(Array* A,int value)
+void ArrayAppend(Array* A,NSInteger value)
 {
 	if( A->size < A->mallocsize || ArrayReSize( A ) > 0 )
 	{
@@ -33,13 +33,13 @@ void ArrayAppend(Array* A,int value)
 
 	return;
 }
-void ArrayInsert(Array* A,int value,int pos)
+void ArrayInsert(Array* A,NSInteger value,NSInteger pos)
 {
-	int size = A->size;
-	int i = 0;
-	int* ptr = 0;
-	int* ptr0 = 0;
-	int** ptr_index = 0;
+	NSInteger size = A->size;
+	NSInteger i = 0;
+	NSInteger* ptr = 0;
+	NSInteger* ptr0 = 0;
+	NSInteger** ptr_index = 0;
 
 	if(pos >= 0 && pos <= size)
 	{
@@ -77,15 +77,15 @@ void ArrayInsert(Array* A,int value,int pos)
 
 	return;
 }
-void ArrayRemove(Array* A,int index)
+void ArrayRemove(Array* A,NSInteger index)
 {
-	int size = A->size;
-	int i; 
-	int* ptr0 = 0;
-	int* ptr = 0;
-	int* ptr_temp = 0;
-	int** ptr_index = 0;
-	int pIndex = 0;
+	NSInteger size = A->size;
+	NSInteger i; 
+	NSInteger* ptr0 = 0;
+	NSInteger* ptr = 0;
+	NSInteger* ptr_temp = 0;
+	NSInteger** ptr_index = 0;
+	NSInteger pIndex = 0;
 	
 	if(index >= 0 && index < size)
 	{	
@@ -124,7 +124,7 @@ void ArrayRemove(Array* A,int index)
 }
 void ArrayReset(Array* A)
 {
-	int i = 0;
+	NSInteger i = 0;
 	
 	for(i = 0;i < A->pIndexNum;i ++)
 		free(*(A->pIndexData+i));	
@@ -136,22 +136,22 @@ void ArrayReset(Array* A)
 	ArrayInit(A);
 }
 
-int ArrayReSize(Array* A)
+NSInteger ArrayReSize(Array* A)
 {
-	int	newsize;
-	int* desData;
-	int mallocsize = MallocByte;
-	int mallocindexsize = MallocIndexByte;
+	NSInteger	newsize;
+	NSInteger* desData;
+	NSInteger mallocsize = MallocByte;
+	NSInteger mallocindexsize = MallocIndexByte;
 
 	//内存不够
 	if(A->pIndexNum + 1 >= INDEX_NUM_MAX )
 		return 0;
 
 	if( !A->pIndexData )
-		A->pIndexData = (int**)malloc(mallocindexsize);
+		A->pIndexData = (NSInteger**)malloc(mallocindexsize);
 	
 	newsize = A->mallocsize + MALLOC_SIZE;
-	desData = (int*)malloc(mallocsize);
+	desData = (NSInteger*)malloc(mallocsize);
 
 	*(A->pIndexData+A->pIndexNum) = desData;
 	A->pIndexNum ++;
@@ -162,11 +162,11 @@ int ArrayReSize(Array* A)
 	return 1;
 }
 
-int ArrayGetValue(Array* A,int index)
+NSInteger ArrayGetValue(Array* A,NSInteger index)
 {
-	int* ptr = 0;
-	int* ptr_index = 0;
-	int pIndex = 0;
+	NSInteger* ptr = 0;
+	NSInteger* ptr_index = 0;
+	NSInteger pIndex = 0;
 
 	if(index >= 0 && index < A->size)
 	{
@@ -193,7 +193,7 @@ void ArrayCInit(struct ArrayC* A)
 	A->SetSize = &ArrayCSetSize;
 	return;
 }
-void ArrayCAppend(ArrayC* A,int value)
+void ArrayCAppend(ArrayC* A,NSInteger value)
 {
 	if( A->size < A->pDataSize )
 		{
@@ -214,7 +214,7 @@ void ArrayCReset(ArrayC* A)
 
 	ArrayCInit(A);
 }
-int  ArrayCGetValue(ArrayC* A,int index)
+NSInteger  ArrayCGetValue(ArrayC* A,NSInteger index)
 {
 	if( index >= 0 && index < A->size )
 		return *(A->pData + index);
@@ -222,12 +222,12 @@ int  ArrayCGetValue(ArrayC* A,int index)
 	return -1;
 }
 
-void ArrayCSetSize(struct ArrayC* A,int size)
+void ArrayCSetSize(struct ArrayC* A,NSInteger size)
 {
     if( A->pDataSize > 0 )
     	return;
     
     A->pDataSize = size;
-    A->pData = (int*)malloc(size*sizeof_int);
+    A->pData = (NSInteger*)malloc(size*sizeof_int);
 	A->pDataEnd = A->pData;
 }

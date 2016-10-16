@@ -50,7 +50,7 @@ static SearchCoreManager *searchCoreManager = nil;
 //string 转 u2char
 - (void)string_u2char:(NSString*)src u2char:(u2char*)des {
     u2char* ptr = des;
-    for (int i = 0; i < [src length]; i ++) {
+    for (NSInteger i = 0; i < [src length]; i ++) {
         unichar word = [src characterAtIndex:i];
         *ptr = word;
         ptr ++;
@@ -62,16 +62,16 @@ static SearchCoreManager *searchCoreManager = nil;
 - (void)ArrayToNSArray:(Array*)array NSArray:(NSMutableArray*)arrayDes {
     [arrayDes removeAllObjects];
     
-    for (int i = 0; i < array->size; i ++) {
-        int aID = array->GetValue(array,i);
-        [arrayDes addObject:[NSNumber numberWithInt:aID]];
+    for (NSInteger i = 0; i < array->size; i ++) {
+        NSInteger aID = array->GetValue(array,i);
+        [arrayDes addObject:[NSNumber numberWithInteger:aID]];
     }
 }
 - (void)AddContact:(NSNumber*)localID name:(NSString*)name phone:(NSArray*)phoneArray {
     //将联系人的号码用分隔符拼接添加到搜索,不直接用Array,为了优化号码搜索(KMP复杂度M+N)
     
     NSMutableString *phoneStr = [[NSMutableString alloc] init];
-    for (int i = 0; i < [phoneArray count]; i ++) {
+    for (NSInteger i = 0; i < [phoneArray count]; i ++) {
         NSString *phone = [phoneArray objectAtIndex:i];
         [phoneStr appendString:phone];
         [phoneStr appendString:separateWord];
@@ -91,7 +91,7 @@ static SearchCoreManager *searchCoreManager = nil;
 - (void)ReplaceContact:(NSNumber*)localID name:(NSString*)name phone:(NSArray*)phoneArray {
     
     NSMutableString *phoneStr = [[NSMutableString alloc] init];
-    for (int i = 0; i < [phoneArray count]; i ++) {
+    for (NSInteger i = 0; i < [phoneArray count]; i ++) {
         NSString *phone = [phoneArray objectAtIndex:i];
         [phoneStr appendString:phone];
         [phoneStr appendString:separateWord];
@@ -124,7 +124,7 @@ static SearchCoreManager *searchCoreManager = nil;
 		searchedArray = new Array;
 		ArrayInit(searchedArray);
         
-        for (int i = 0; i < [aSearchedArray count]; i ++) {
+        for (NSInteger i = 0; i < [aSearchedArray count]; i ++) {
             NSNumber *number = [aSearchedArray objectAtIndex:i];
             searchedArray->Append(searchedArray,[number intValue]);
         }
@@ -189,7 +189,7 @@ static SearchCoreManager *searchCoreManager = nil;
 	
 	BOOL result = Tree_GetPinYin(&iSearchTree,[localID intValue],pinyinBuf,aMatchPosInPinYin);
     
-    int length = u2slen(pinyinBuf);
+    NSInteger length = u2slen(pinyinBuf);
     [pinyinDes appendString:[NSString stringWithCharacters:(unichar*)pinyinBuf length:length]];
 	
 	if (aMatchPosInPinYin) {
@@ -204,7 +204,7 @@ static SearchCoreManager *searchCoreManager = nil;
 //用分隔符拼接的号码，转换到原有的样式，提取匹配的号码及匹配位置
 - (void) ChangeToOranagePhones:(NSString*)phones matchPos:(NSArray*)matchPos phoneArray:(NSMutableArray*)phoneArray matchPosArray:(NSMutableArray*)matchPosArray {
     
-    int start = [[matchPos objectAtIndex:0] intValue];
+    NSInteger start = [[matchPos objectAtIndex:0] intValue];
     while (start >= 0) {
         unichar word = [phones characterAtIndex:start];
         if (word == KSeparateWord) {
@@ -214,7 +214,7 @@ static SearchCoreManager *searchCoreManager = nil;
     }
     start ++;
     
-    int end = [[matchPos objectAtIndex:matchPos.count-1] intValue];
+    NSInteger end = [[matchPos objectAtIndex:matchPos.count-1] intValue];
     while (end < [phones length]) {
         unichar word = [phones characterAtIndex:end];
         if (word == KSeparateWord) {
@@ -226,10 +226,10 @@ static SearchCoreManager *searchCoreManager = nil;
     NSString *phone = [phones substringWithRange:range];
     
     NSMutableArray *matchPosDes = [[NSMutableArray alloc] init];
-    for (int i = 0; i < [matchPos count]; i ++) {
-        int pos = [[matchPos objectAtIndex:i] intValue];
+    for (NSInteger i = 0; i < [matchPos count]; i ++) {
+        NSInteger pos = [[matchPos objectAtIndex:i] intValue];
         pos -= start;
-        [matchPosDes addObject:[NSNumber numberWithInt:pos]];
+        [matchPosDes addObject:[NSNumber numberWithInteger:pos]];
     }
     [phoneArray addObject:phone];
     [matchPosArray addObject:matchPosDes];
@@ -251,7 +251,7 @@ static SearchCoreManager *searchCoreManager = nil;
     NSMutableString *phoneDes = [[NSMutableString alloc] init];
     NSMutableArray *matchPos = [[NSMutableArray alloc] init];
     BOOL result = Tree_GetPhoneNum(&iSearchTree,[localID intValue],(u2char*)phoneBuf,aMatchPosInPhoneNum);
-    int length = u2slen(phoneBuf);
+    NSInteger length = u2slen(phoneBuf);
     [phoneDes appendString:[NSString stringWithCharacters:(unichar*)phoneBuf length:length]];
 	if (aMatchPosInPhoneNum) {
         [self ArrayToNSArray:aMatchPosInPhoneNum NSArray:matchPos];
