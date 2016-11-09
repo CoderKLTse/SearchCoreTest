@@ -289,6 +289,7 @@
 		9AF53A2316B65398008510DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SearchCoreTest/SearchCoreTest-Prefix.pch";
 				INFOPLIST_FILE = "SearchCoreTest/SearchCoreTest-Info.plist";
@@ -301,6 +302,7 @@
 		9AF53A2416B65398008510DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SearchCoreTest/SearchCoreTest-Prefix.pch";
 				INFOPLIST_FILE = "SearchCoreTest/SearchCoreTest-Info.plist";

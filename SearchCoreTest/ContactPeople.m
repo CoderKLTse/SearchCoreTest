@@ -13,13 +13,13 @@
 @synthesize name;
 @synthesize phoneArray;
 
-- (void)dealloc
-{
-    self.localID = nil;
-    self.name = nil;
-    self.phoneArray = nil;
-    
-    [super dealloc];
-}
+//- (void)dealloc
+//{
+//    self.localID = nil;
+//    self.name = nil;
+//    self.phoneArray = nil;
+//    
+//    [super dealloc];
+//}
 
 @end

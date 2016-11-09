@@ -22,14 +22,16 @@
 @synthesize searchByPhone;
 
 - (void)tableViewInit {
-    self.tableView = [[[UITableView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f-44.0f)] autorelease];
+//    self.tableView = [[[UITableView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f-44.0f)] autorelease];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f-44.0f)];
     self.tableView.dataSource=self;
 	self.tableView.delegate=self;
 	self.tableView.backgroundColor=[UIColor clearColor];
 	[self.view addSubview:self.tableView];
 }
 - (void)searchBarInit {
-     self.searchBar = [[[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 310.0f, 44.0f)] autorelease];
+//     self.searchBar = [[[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 310.0f, 44.0f)] autorelease];
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 310.0f, 44.0f)];
     
     self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -53,15 +55,15 @@
     
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     self.contactDic = dic;
-    [dic release];
+//    [dic release];
     
     NSMutableArray *nameIDArray = [[NSMutableArray alloc] init];
     self.searchByName = nameIDArray;
-    [nameIDArray release];
+//    [nameIDArray release];
     NSMutableArray *phoneIDArray = [[NSMutableArray alloc] init];
     
     self.searchByPhone = phoneIDArray;
-    [phoneIDArray release];
+//    [phoneIDArray release];
     
     
     
@@ -73,14 +75,14 @@
     [phoneArray addObject:@"13800138000"];
     [phoneArray addObject:@"10086"];
     contact.phoneArray = phoneArray;
-    [phoneArray release];
+//    [phoneArray release];
     
     [self.contactDic setObject:contact forKey:contact.localID];
     
     //添加到搜索库
     [[SearchCoreManager share] AddContact:contact.localID name:contact.name phone:contact.phoneArray];
     
-    [contact release];
+//    [contact release];
     
     
     for (int i = 1; i < 20; i ++) {
@@ -89,7 +91,7 @@
         contact.name = [NSString stringWithFormat:@"测试%d",i];
         [[SearchCoreManager share] AddContact:contact.localID name:contact.name phone:contact.phoneArray];
         [self.contactDic setObject:contact forKey:contact.localID];
-        [contact release];
+//        [contact release];
     }
 }
 
@@ -117,7 +119,8 @@
     static NSString *indentifier = @"Cell";
     UITableViewCell *cell = (UITableViewCell*)[_tableView dequeueReusableCellWithIdentifier:indentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:indentifier] autorelease];
+//        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:indentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:indentifier];
 		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
 	}
    

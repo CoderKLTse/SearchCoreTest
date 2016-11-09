@@ -26,7 +26,8 @@ static SearchCoreManager *searchCoreManager = nil;
         SearchTreeInit(&iSearchTree);
         NSString *multiPYinpath = [[NSBundle mainBundle] pathForResource:@"multipy_unicode" ofType:@"dat"];
         LoadMultiPYinWords([multiPYinpath UTF8String]);
-        separateWord = [[NSString stringWithFormat:@"%c",KSeparateWord] retain];
+//        separateWord = [[NSString stringWithFormat:@"%c",KSeparateWord] retain];
+        separateWord = [NSString stringWithFormat:@"%c",KSeparateWord];
     }
     return self;
 }
@@ -35,11 +36,11 @@ static SearchCoreManager *searchCoreManager = nil;
     if (matchFunction==matchFunc || [matchFunction isEqualToString:matchFunc]) {
         return;
     }
-    if (matchFunction) {
-        [matchFunction release];
-    }
-    matchFunction = [matchFunc retain];
-    
+//    if (matchFunction) {
+//        [matchFunction release];
+//    }
+//    matchFunction = [matchFunc retain];
+    matchFunction = matchFunc;
     
 	u2char buf[256];
 	[self string_u2char:matchFunc u2char:buf];
@@ -85,7 +86,7 @@ static SearchCoreManager *searchCoreManager = nil;
     
     Tree_AddData(&iSearchTree,[localID intValue],nameBuf,phoneBuf);
     
-    [phoneStr release];
+//    [phoneStr release];
 }
 
 - (void)ReplaceContact:(NSNumber*)localID name:(NSString*)name phone:(NSArray*)phoneArray {
@@ -105,7 +106,7 @@ static SearchCoreManager *searchCoreManager = nil;
     
     Tree_ReplaceData(&iSearchTree,[localID intValue],nameBuf,phoneBuf);
 
-    [phoneStr release];
+//    [phoneStr release];
 }
 
 - (void)DeleteContact:(NSNumber*)localID {
@@ -233,7 +234,7 @@ static SearchCoreManager *searchCoreManager = nil;
     }
     [phoneArray addObject:phone];
     [matchPosArray addObject:matchPosDes];
-    [matchPosDes release];
+//    [matchPosDes release];
 }
 
 - (BOOL)GetPhoneNum:(NSNumber*)localID phone:(NSMutableArray*)phoneArray matchPos:(NSMutableArray*)matchPosArray {
@@ -261,15 +262,15 @@ static SearchCoreManager *searchCoreManager = nil;
     
     [self ChangeToOranagePhones:phoneDes matchPos:matchPos phoneArray:phoneArray matchPosArray:matchPosArray];
     
-    [phoneDes release];
-    [matchPos release];
+//    [phoneDes release];
+//    [matchPos release];
     return result;
 }
 
 - (void)Reset {
-    if (matchFunction) {
-        [matchFunction release];
-    }
+//    if (matchFunction) {
+//        [matchFunction release];
+//    }
     
     FreeSearchTree(&iSearchTree);
     SearchTreeInit(&iSearchTree);
@@ -281,13 +282,13 @@ static SearchCoreManager *searchCoreManager = nil;
     //释放搜索库
     FreeSearchTree(&iSearchTree);
 	
-    if (separateWord) {
-        [separateWord release];
-    }
-    if (matchFunction) {
-        [matchFunction release];
-    }
+//    if (separateWord) {
+//        [separateWord release];
+//    }
+//    if (matchFunction) {
+//        [matchFunction release];
+//    }
 
-    [super dealloc];
+//    [super dealloc];
 }
 @end
